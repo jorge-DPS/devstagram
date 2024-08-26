@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Incia Sesion en DevStagram
+    Incia Sesión en DevStagram
 @endsection
 
 @section('contenido')
@@ -14,6 +14,7 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
+                {{-- session; tre la informacion desde el controlador login --}}
                 @if (session('mensaje_error'))
                     <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{ session('mensaje_error') }}
                     </p>
@@ -34,6 +35,13 @@
                     @error('password')
                         <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div>
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember" class="text-gray-500 text-sm">
+                        Mantener la sesión abierta
+                    </label>
                 </div>
 
                 <input type="submit" value="Iniciar Sesion"
