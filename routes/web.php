@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\ComentarioController;
-use App\Http\Controllers\ImagenController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PerfilController;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegisterController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('principal');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/resgister', [RegisterController::class, 'index'])->name('register');
 Route::post('/resgister', [RegisterController::class, 'store']);
@@ -35,7 +35,6 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 // Imagenes
 Route::post('/imagenes', [ImagenController::class, 'store'])->name('imagenes.store');
 
-
 // Like a las fotos
 Route::post('/posts/{post}/likes', [LikeController::class, 'store'])->name('posts.likes.store');
 Route::delete('/posts/{post}/likes', [LikeController::class, 'destroy'])->name('posts.likes.destroy');
@@ -43,3 +42,8 @@ Route::delete('/posts/{post}/likes', [LikeController::class, 'destroy'])->name('
 // rutas para editar perfil
 Route::get('/{user:username}/editar-perfil', [PerfilController::class, 'index'])->name('perfil.index');
 Route::post('/{user:username}/editar-perfil', [PerfilController::class, 'store'])->name('perfil.store');
+
+//Siguiendo a Usuarios
+// {user:username} -> es el usuario del post al que estamos visitando y no asi el usuario autenticado
+Route::post('{user:username}/follow',[FollowerController::class, 'store'])->name('users.follow');
+Route::delete('{user:username}/unfollow',[FollowerController::class, 'destroy'])->name('users.unfollow');

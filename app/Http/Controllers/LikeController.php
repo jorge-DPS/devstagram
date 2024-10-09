@@ -10,6 +10,9 @@ class LikeController extends Controller
 {
     // guardar los likes
     public function store(Request $request, Post $post){
+        // dd($request->user()); // -> el request->user = muestra la infomracion del usuario autenticado, no el usuario de la pagina la que estamos visitando
+        
+
         $post->likes()->create([
             'user_id' => $request->user()->id,
         ]);

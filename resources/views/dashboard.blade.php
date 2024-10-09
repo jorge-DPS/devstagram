@@ -8,7 +8,9 @@
     <div class="flex justify-center">
         <div class="w-full md:w-8/12 lg:w-6/12 flex flex-col items-center md:flex-row">
             <div class="w-8/12 lg:w-6/12 px-5">
-                <img src="{{ asset('img/usuario.svg') }}" alt="imagen usuario">
+                {{-- <img src="{{ asset('img/usuario.svg') }}" alt="imagen usuario"> --}}
+                <img src="{{ $user->imagen ? asset('imagenes_perfil') . '/' . $user->id . '/' . $user->imagen : asset('img/usuario.svg') }}"
+                    alt="imagen usuario" />
             </div>
 
             <div class="md:w-8/12 lg:w-6/12 px-5 flex flex-col items-center md:justify-center md:items-start py-10">
@@ -17,7 +19,7 @@
 
                     @auth
                         @if ($user->id === auth()->user()->id)
-                            <a href="{{ route('perfil.index', [$user]) }}"
+                            <a href="{{ route('perfil.index', $user) }}"
                                 class="text-gray-500 ransition ease-in-out delay-75  hover:-translate-y-1 hover:scale-x-110 duration-200 cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" class="size-6">
@@ -31,17 +33,42 @@
                 </div>
 
                 <p class="text-gray-800 text-sm mb-3 font-bold mt-5">
-                    0
-                    <span class="font-normal">Seguidores</span>
+                    {{ $user->followers->count() }}
+                    <span class="font-normal">@choice('Seguidor|Seguidores', $user->followers->count())</span>
                 </p>
                 <p class="text-gray-800 text-sm mb-3 font-bold">
-                    0
+                    {{ $user->following->count() }}
                     <span class="font-normal">Siguiendo</span>
                 </p>
                 <p class="text-gray-800 text-sm mb-3 font-bold">
-                    0
+                    {{ $user->posts->count() }}
                     <span class="font-normal">Post</span>
                 </p>
+
+                @auth
+                    {{-- evitar seguirte a ti mismo --}}
+                    @if ($user->id !== Auth()->user()->id)
+                        @if (!$user->siguiendo(Auth::user()))
+                            <form action=" {{ route('users.follow', $user) }} " method="POST">
+                                @csrf
+                                <input type="submit"
+                                    class="bg-blue-600 text-white uppercase rounded-lg px-3 py-1 text-xs font-bold cursor-pointer"
+                                    value="Seguir">
+
+                            </form>
+                        @else
+                            <form action=" {{ route('users.unfollow', $user) }} " method="POST">
+                                @method('DELETE')
+                                @csrf
+                                <input type="submit"
+                                    class="bg-red-600 text-white uppercase rounded-lg px-3 py-1 text-xs font-bold cursor-pointer"
+                                    value="Dejar de seguir  ">
+
+                            </form>
+                        @endif
+                    @endif
+
+                @endauth
             </div>
 
         </div>
@@ -50,27 +77,6 @@
     {{-- Mostrando los Posts que le pasamos al view en el controlador --}}
     <section>
         <h2 class="text-4xl text-center font-black my-10">Publicaciones</h2>
-        @if ($posts->count())
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @foreach ($posts as $post)
-                    <div class="">
-                        <a href="{{ route('posts.show', ['user' => $user, 'post' => $post]) }}">
-                            <img src="{{ asset('uploads') . '/' . $post->imagen }}"
-                                alt="Imagen del post {{ $post->titulo }}">
-                        </a>
-                    </div>
-                @endforeach
-
-            </div>
-
-            <div class="my-10">
-                {{-- tailwind usa JIT Mode --}}
-                {{ $posts->links('pagination::tailwind') }}
-            </div>
-        @else
-            <div>
-                <p class="text-gray-600 uppercase text-sm text-center font-bold">No hay Publicaciones</p>
-            </div>
-        @endif
+        <x-listar-post :posts="$posts" />
     </section>
 @endsection

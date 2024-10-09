@@ -30,7 +30,7 @@ class PostController extends Controller implements HasMiddleware
         // dd(auth()->user()->username);
         // dd($user->username); //-> route model binding; donde el userm¿name se muestra en el barra de navegacion
 
-        $posts = Post::where('user_id', $user->id)->paginate(2);
+        $posts = Post::where('user_id', $user->id)->latest()->paginate(20);
 
         return view('dashboard', [
             // perfil del usuario

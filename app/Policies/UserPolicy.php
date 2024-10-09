@@ -38,6 +38,8 @@ class UserPolicy
      */
     public function update(User $userActual, User $userPerfil): bool
     {
+        // dd($userActual);
+
         // actualizar un registro, editar perfil
         return $userActual->id === $userPerfil->id;
 
@@ -67,11 +69,6 @@ class UserPolicy
         //
     }
 
-    public function boot(): void
-    {
-        $this->register();
-
-        // Aquí puedes agregar cualquier lógica adicional si es necesario
-    }
+    
 
 }

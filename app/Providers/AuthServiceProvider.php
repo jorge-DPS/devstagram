@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Policies\UserPolicy;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,10 +23,10 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      */
-    public function boot(): void
-    {
-        $this->register();
+    // public function boot(): void
+    // {
+    //     $this->register();
 
-        // Aquí puedes agregar cualquier lógica adicional si es necesario
-    }
+    //     // Aquí puedes agregar cualquier lógica adicional si es necesario
+    // }
 }
